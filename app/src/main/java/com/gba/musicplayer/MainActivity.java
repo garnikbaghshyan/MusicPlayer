@@ -2,16 +2,29 @@ package com.gba.musicplayer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    ImageView prev;
+    ImageView rewind;
     ImageView play;
     ImageView pause;
-    ImageView next;
+    ImageView forward;
+    SeekBar seekbar;
+    TextView textView;
+
+
+    MediaPlayer mediaPlayer;
+    Handler handler = new Handler();
+
+    double curPosTime = 0;
+    double durationTime = 0;
+    static int oneTimeOnly = 0;
 
 
     @Override
@@ -19,37 +32,72 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prev = findViewById(R.id.prevID);
-        next = findViewById(R.id.nextID);
+        rewind = findViewById(R.id.rewindID);
+        forward = findViewById(R.id.forwardID);
         play = findViewById(R.id.playID);
         pause = findViewById(R.id.pauseID);
+
+        seekbar = findViewById(R.id.seekBarID);
+
+        textView = findViewById(R.id.textID);
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.you);
+        seekbar.setClickable(false);
+
 
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Play song", Toast.LENGTH_SHORT).show();
+                mediaPlayer.start();
+                durationTime = mediaPlayer.getDuration();
+                curPosTime = mediaPlayer.getCurrentPosition();
+
+                if (oneTimeOnly == 0) {
+                    seekbar.setMax((int)durationTime);
+                    oneTimeOnly = 1;
+                }
+
+                seekbar.setProgress((int)curPosTime);
+                handler.postDelayed(UpdateSongTime, 100);
             }
         });
+
+
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Pause song", Toast.LENGTH_SHORT).show();
+                mediaPlayer.pause();
             }
         });
-        next.setOnClickListener(new View.OnClickListener() {
+        rewind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Next song", Toast.LENGTH_SHORT).show();
+                if (curPosTime - 1000 >= 0) {
+                    curPosTime = curPosTime - 1000;
+                    mediaPlayer.seekTo((int)curPosTime);
+                }
             }
         });
-        prev.setOnClickListener(new View.OnClickListener() {
+        forward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Previews song", Toast.LENGTH_SHORT).show();
+                if (curPosTime + 1000 <= durationTime) {
+                    curPosTime = curPosTime + 1000;
+                    mediaPlayer.seekTo((int)curPosTime);
+                }
             }
         });
+
 
 
     }
+    private final Runnable UpdateSongTime = new Runnable() {
+        @Override
+        public void run() {
+            curPosTime = mediaPlayer.getCurrentPosition();
+            seekbar.setProgress((int)curPosTime);
+            handler.postDelayed(this, 100);
+        }
+    };
 }

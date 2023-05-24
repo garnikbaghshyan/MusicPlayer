@@ -43,7 +43,7 @@
         android:text="Song name: " />
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/seekBarID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -57,14 +57,14 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:id="@+id/prevID"
+            android:id="@+id/rewindID"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:contentDescription="Previous song"
-            app:srcCompat="@drawable/previous" />
+            android:contentDescription="Rewind song"
+            app:srcCompat="@drawable/rewind" />
 
         <ImageView
             android:id="@+id/playID"
@@ -87,14 +87,14 @@
             app:srcCompat="@drawable/pause" />
 
         <ImageView
-            android:id="@+id/nextID"
+            android:id="@+id/forwardID"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:contentDescription="Next song"
-            app:srcCompat="@drawable/next" />
+            android:contentDescription="Forward song"
+            app:srcCompat="@drawable/forward" />
 
     </LinearLayout>
 
